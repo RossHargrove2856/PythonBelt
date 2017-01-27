@@ -19,9 +19,8 @@
         {% endif %}
         <form action="/register" method="POST">
             {% csrf_token %}
-            <p><label>First Name:</label><input type="text" name="first_name"></p>
-            <p><label>Last Name:</label><input type="text" name="last_name"></p>
-            <p><label>Email:</label><input type="text" name="email"></p>
+            <p><label>Name:</label><input type="text" name="first_name"></p>
+            <p><label>Username:</label><input type="text" name="username"></p>
             <p><label>Password:</label><input type="password" name="password"></p>
             <p><label>Confirm Password:</label><input type="password" name="confirmpw"></p>
             <input type="submit" value="Register">
@@ -31,7 +30,7 @@
         <h1>Login</h1>
         <form action="/login" method="POST">
             {% csrf_token %}
-            <p><label>Email:</label><input type="text" name="email"></p>
+            <p><label>Username:</label><input type="text" name="username"></p>
             <p><label>Password:</label><input type="password" name="password"></p>
             <input type="submit" value="Login">
         </form>

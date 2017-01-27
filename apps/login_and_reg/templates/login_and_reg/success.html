@@ -6,10 +6,39 @@
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
+    <a href="/logout">Logout</a>
     <h1>Welcome {{user.first_name}}</h1>
-    <form action="/logout" method="POST">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-    </form>
+    <p>{{ request.session.logged_in }}</p>
+    <p>Your Wish List</p>
+    <table>
+        <thead>
+            <tr>
+                <td>Item</td><td>Added By</td><td>Date Added</td><td>Action</td>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in user_items %}
+            <tr>
+                <td><a href="/belt/item/info/{{item.id}}">{{item.name}}</a></td> <td>{{item.logged_user.first_name}}</td> <td>{{item.created_at}}</td> <td><a href="belt/removeWishlist/{{item.id}}">Remove From My Wishlist</a> <a href="belt/destroy/{{item.id}}">Delete</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <p>Other User's Wish List</p>
+    <table>
+        <thead>
+            <tr>
+                <td>Item</td><td>Added By</td><td>Date Added</td><td>Action</td>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in other_items %}
+            <tr>
+                <td><a href="/belt/item/info/{{item.id}}">{{item.name}}</a></td><td>{{item.logged_user.first_name}}</td><td>{{item.created_at}}</td><td><a href="belt/addWishlist/{{item.id}}">Add to Wishlist</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="belt/createItem">Add Item</a>
 </body>
 </html>

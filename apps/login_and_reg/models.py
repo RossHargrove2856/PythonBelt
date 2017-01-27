@@ -6,28 +6,18 @@ import bcrypt
 class UserManager(models.Manager):
     def register(self, request):
         isValid = True
-        if len(request.POST["first_name"]) < 2:
-            messages.error(request, "First Name required, has to be more than 1 character")
+        if len(request.POST["first_name"]) < 3:
+            messages.error(request, "Name required, has to be more than 1 character")
             isValid = False
         if str.isalpha(str(request.POST["first_name"])) == False:
-            messages.error(request, "First Name can only be letters")
+            messages.error(request, "Name can only be letters")
             isValid = False
-        if len(request.POST["last_name"]) < 2:
-            messages.error(request, "Last Name required, has to be more than 1 character")
+        if len(request.POST["username"]) < 3:
+            messages.error(request, "Username required")
             isValid = False
-        if str.isalpha(str(request.POST["last_name"])) == False:
-            messages.error(request, "Last Name can only be letters")
-            isValid = False
-        if len(request.POST["email"]) < 2:
-            messages.error(request, "Email required")
-            isValid = False
-        email_match = r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$'
-        if not email_match.match(request.POST["email"]):
-            messages.error(request, "Invalid Email")
-            isValid = False
-        email_compare = User.objects.filter(email=request.POST["email"])
+        email_compare = User.objects.filter(username=request.POST["username"])
         if len(email_compare) > 0:
-            messages.error(request, "This email is already registered")
+            messages.error(request, "This username is already registered")
             isValid = False
         if len(request.POST["password"]) < 6:
             messages.error(request, "Password cannot be less than 6 characters")
@@ -41,8 +31,7 @@ class UserManager(models.Manager):
         hashed_pw = bcrypt.hashpw(request.POST["password"].encode("utf-8"), bcrypt.gensalt())
         new_user = User (
                 first_name = request.POST["first_name"],
-                last_name = request.POST["last_name"],
-                email = request.POST["email"],
+                username = request.POST["username"],
                 pw_hashed = hashed_pw,
             )
         new_user.save()
@@ -53,12 +42,12 @@ class UserManager(models.Manager):
 
     def login(self, request):
         isValid = True
-        user = User.objects.filter(email=request.POST["email"])
-        if len(user) == 0:
+        user = User.objects.get(username=request.POST["username"])
+        if len(user.username) == 0:
             messages.error(request, "You are not a registered user")
             return False
-        if len(request.POST["email"]) < 1:
-            messages.error(request, "Email cannot be blank")
+        if len(request.POST["username"]) < 1:
+            messages.error(request, "Username cannot be blank")
             isValid = False
         if len(request.POST["password"]) < 1:
             messages.error(request, "Password cannot be blank")
@@ -70,14 +59,13 @@ class UserManager(models.Manager):
         if not isValid:
             return False
 
-        request.session["logged-in"] = user.id
+        request.session["logged_in"] = user.id
 
         return True
 
 class User(models.Model):
     first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
+    username = models.CharField(max_length=255)
     pw_hashed = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

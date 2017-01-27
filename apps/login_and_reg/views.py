@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from models import User
+from ..myBelt.models import Item
 
 def index(request):
     return render(request, "login_and_reg/index.html")
@@ -20,8 +21,12 @@ def login(request):
 
 def success(request):
     user = User.objects.get(id=request.session["logged_in"])
+    other_items = Item.objects.exclude(logged_user=user)
+    user_items = user.item_set.all()
     context = {
-        "user":user
+        "user":user,
+        "other_items": other_items,
+        "user_items": user_items
     }
     return render(request, "login_and_reg/success.html", context)
 
