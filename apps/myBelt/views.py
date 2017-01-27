@@ -13,8 +13,9 @@ def addItem(request):
 
 def itemInfo(request, item_id):
     items = Item.objects.get(id=item_id)
+
     context = {
-        "items": items
+        "items": items,
     }
     return render(request, "myBelt/itemInfo.html", context)
 
