@@ -19,5 +19,5 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('apps.login_and_reg.urls')),
-    url(r'^', include('apps.myBelt.urls'))
+    url(r'^belt', include('apps.myBelt.urls'))
 ]
