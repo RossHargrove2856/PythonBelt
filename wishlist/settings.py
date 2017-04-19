@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'apps.myBelt',
+    'apps.wishlist_app',
     'apps.login_and_reg',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -51,7 +51,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'PythonBelt.urls'
+ROOT_URLCONF = 'wishlist.urls'
 
 TEMPLATES = [
     {
@@ -69,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'PythonBelt.wsgi.application'
+WSGI_APPLICATION = 'wishlist.wsgi.application'
 
 
 # Database

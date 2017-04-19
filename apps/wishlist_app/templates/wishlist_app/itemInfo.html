@@ -2,16 +2,16 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>User Profile</title>
+    <title>{{item.name}}</title>
     {% load staticfiles %}
-    <link rel="stylesheet" type="text/css" href="{% static 'login_and_reg/css/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'wishlist_app/css/bootstrap.css' %}">
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-static-top">
         <div class="container">
             <div class="navbar-header">
-                <span class="navbar-brand">Wishlist | {{ logged_user.first_name }}</span>
+                <span class="navbar-brand">Wishlist | {{ user.first_name }}</span>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
@@ -21,18 +21,12 @@
             </div>
         </div>
     </nav>
-    <!-- Wrapper for main content -->
+    <!-- Item Information -->
     <div class="container-fluid">
-        <!-- User Information -->
-        <h1>User Profile</h1>
-        <h5>Name: {{user.first_name}}</h5>
-        <h5>Username: {{user.username}}</h5>
-        <h5>Items on this users Wishlist:</h5>
-        <ul>
-        {% for item in items %}
-            <li><a href="/wishlist_app/item/info/{{ item.id }}">{{ item.name }}</a></li>
+        <h1 class="page-header">{{item.name}}</h1>
+        <h5 class="sub-header">Users who added this product/item under their wish list</h5>
+        {% for user in item.item_user.all %}
+            <p><a href="/userInfo/{{ user.id }}">{{ user.first_name }}</a></p>
         {% endfor %}
-        </ul>
     </div>
-</body>
 </html>

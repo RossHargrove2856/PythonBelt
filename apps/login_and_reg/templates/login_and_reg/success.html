@@ -3,41 +3,81 @@
 <head>
     <meta charset="utf-8">
     <title>Success</title>
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'login_and_reg/css/bootstrap.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'login_and_reg/css/bootstrap_theme.css' %}">
 </head>
 <body>
-    <a href="/logout">Logout</a>
-    <h1>Welcome {{user.first_name}}</h1>
-    <p>Your Wish List</p>
-    <table>
-        <thead>
-            <tr>
-                <td>Item</td><td>Added By</td><td>Date Added</td><td>Action</td>
-            </tr>
-        </thead>
-        <tbody>
-        {% for item in user_items %}
-            <tr>
-                <td><a href="/belt/item/info/{{item.id}}">{{item.name}}</a></td> <td>{{item.logged_user.first_name}}</td> <td>{{item.created_at}}</td> <td><a href="belt/removeWishlist/{{item.id}}">Remove From My Wishlist</a> <a href="belt/destroy/{{item.id}}">Delete</a></td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <p>Other User's Wish List</p>
-    <table>
-        <thead>
-            <tr>
-                <td>Item</td><td>Added By</td><td>Date Added</td><td>Action</td>
-            </tr>
-        </thead>
-        <tbody>
-        {% for item in other_items %}
-            <tr>
-                <td><a href="/belt/item/info/{{item.id}}">{{item.name}}</a></td><td>{{item.logged_user.first_name}}</td><td>{{item.created_at}}</td><td><a href="belt/addWishlist/{{item.id}}">Add to Wishlist</a></td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    <a href="belt/createItem">Add Item</a>
+    <!-- Navigation -->
+    <nav class="navbar navbar-inverse navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <span class="navbar-brand">Wishlist | {{ user.first_name }}</span>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/wishlist_app/createItem">Add Item</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Wrapper for main content -->
+    <div class="container-fluid">
+        <h1 class="page-header">Dashboard</h1>
+        <h4 class="sub-header">Your Wish List</h4>
+        <!-- First table of logged in user's wishlist items -->
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Added By</th>
+                        <th>Date Added</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in user_items %}
+                    <tr>
+                        <td><a href="/wishlist_app/item/info/{{ item.id }}">{{ item.name }}</a></td>
+                        <td>{{ item.logged_user.first_name }}</td>
+                        <td>{{ item.created_at }}</td>
+                        <!-- Shows option to permanently delete an item from the database only if the user that is logged in is the user that added the item -->
+                        <td><a href="/wishlist_app/removeWishlist/{{ item.id }}">Remove From My Wishlist</a>
+                            {% if item.logged_user.id == request.session.logged_in %}
+                                | <a href="/wishlist_app/destroy/{{ item.id }}">Delete</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- Second table that shows all the other available items that are not on the logged in user's wishlist -->
+        <h4 class="sub-header">Other User's Wish List</h4>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Added By</th>
+                        <th>Date Added</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in other_items %}
+                    <tr>
+                        <td><a href="/wishlist_app/item/info/{{ item.id }}">{{ item.name }}</a></td>
+                        <td><a href="/userInfo/{{ item.logged_user.id }}">{{ item.logged_user.first_name }}</a></td>
+                        <td>{{ item.created_at }}</td>
+                        <td><a href="/wishlist_app/addWishlist/{{ item.id }}">Add to Wishlist</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 </html>
